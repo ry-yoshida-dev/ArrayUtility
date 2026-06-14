@@ -4,14 +4,14 @@ from abc import abstractmethod
 from dataclasses import dataclass, field
 import warnings
 
-import numpy as np
 
 from ..base import BaseRingBuffer
+from ...types import NumericArray
 
 
 @dataclass
 class BaseAveragingRingBuffer(BaseRingBuffer):
-    _accumulator: np.ndarray = field(init=False)
+    _accumulator: NumericArray = field(init=False)
 
     def __post_init__(self) -> None:
         """
@@ -27,28 +27,28 @@ class BaseAveragingRingBuffer(BaseRingBuffer):
         """
 
     @abstractmethod
-    def _sum_chunk(self, values: np.ndarray) -> np.ndarray:
+    def _sum_chunk(self, values: NumericArray) -> NumericArray:
         """
         Convert one or more vectors into accumulated statistics.
 
         Parameters
         ----------
-        values : np.ndarray
+        values : NumericArray
             Values with shape (m, *feature_shape).
 
         Returns
         -------
-        np.ndarray
+        NumericArray
             Accumulated statistics with shape (*accumulator_shape).
         """
 
-    def update(self, value: np.ndarray) -> None:
+    def update(self, value: NumericArray) -> None:
         """
         Update the buffer with a new vector.
 
         Parameters
         ----------
-        value : np.ndarray
+        value : NumericArray
             The new vector with shape (*feature_shape) to be stored.
         """
         self._validate_vector_shape(value)
@@ -58,13 +58,13 @@ class BaseAveragingRingBuffer(BaseRingBuffer):
         self.value[self._index] = value
         self._update_index()
 
-    def extend(self, values: np.ndarray) -> None:
+    def extend(self, values: NumericArray) -> None:
         """
         Extend the buffer with new vectors.
 
         Parameters
         ----------
-        values : np.ndarray
+        values : NumericArray
             The new vectors with shape (m, *feature_shape) to be stored.
         """
         self._validate_batch_shape(values)
@@ -98,12 +98,12 @@ class BaseAveragingRingBuffer(BaseRingBuffer):
 
     @property
     @abstractmethod
-    def mean(self) -> np.ndarray:
+    def mean(self) -> NumericArray:
         """
         Get the representative value of the buffer.
 
         Returns
         -------
-        np.ndarray
+        NumericArray
             Representative value with shape (*feature_shape).
         """

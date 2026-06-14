@@ -5,34 +5,35 @@ from dataclasses import dataclass
 import numpy as np
 
 from .base import BaseAveragingRingBuffer
+from ...types import NumericArray
 
 
 @dataclass
 class AveragingRingBuffer(BaseAveragingRingBuffer):
-    def _sum_chunk(self, values: np.ndarray) -> np.ndarray:
+    def _sum_chunk(self, values: NumericArray) -> NumericArray:
         """
         Sum vectors over a chunk.
 
         Parameters
         ----------
-        values : np.ndarray
+        values : NumericArray
             Values with shape (m, *feature_shape).
 
         Returns
         -------
-        np.ndarray
+        NumericArray
             Element-wise sum with shape (*feature_shape).
         """
         return np.sum(values, axis=0)
 
     @property
-    def mean(self) -> np.ndarray:
+    def mean(self) -> NumericArray:
         """
         Get the mean of the buffer.
 
         Returns
         -------
-        np.ndarray
+        NumericArray
             The arithmetic mean of the buffer with shape (*feature_shape).
         """
         return self._accumulator / self.n

@@ -1,10 +1,12 @@
 from __future__ import annotations
 
 from dataclasses import dataclass
+from typing import cast
 
 import numpy as np
 
 from .base import BaseAveragingRingBuffer
+from ...types import IntegerArray, NumericArray, UInt8Array
 
 
 @dataclass
@@ -25,40 +27,56 @@ class BitAveragingRingBuffer(BaseAveragingRingBuffer):
         if self.value.dtype != np.uint8:
             raise TypeError(f"value dtype must be uint8, but got {self.value.dtype}")
 
-    def update(self, value: np.ndarray) -> None:
+    def update(self, value: NumericArray) -> None:
+        """
+        Update the buffer with a new vector.
+
+        Parameters
+        ----------
+        value : NumericArray
+            The new vector with shape (*feature_shape) to be stored.
+        """
         if value.dtype != np.uint8:
             raise TypeError(f"value dtype must be uint8, but got {value.dtype}")
         super().update(value)
 
-    def extend(self, values: np.ndarray) -> None:
+    def extend(self, values: NumericArray) -> None:
+        """
+        Extend the buffer with new vectors.
+
+        Parameters
+        ----------
+        values : NumericArray
+            The new vectors with shape (m, *feature_shape) to be stored.
+        """
         if values.dtype != np.uint8:
             raise TypeError(f"values dtype must be uint8, but got {values.dtype}")
         super().extend(values)
 
-    def _sum_chunk(self, values: np.ndarray) -> np.ndarray:
+    def _sum_chunk(self, values: NumericArray) -> IntegerArray:
         """
         Sum unpacked bits over a chunk.
 
         Parameters
         ----------
-        values : np.ndarray
+        values : NumericArray
             Bit-encoded values with shape (m, *feature_shape).
 
         Returns
         -------
-        np.ndarray
+        IntegerArray
             Bit-count array with shape (*feature_shape[:-1], feature_shape[-1] * 8).
         """
-        return np.sum(np.unpackbits(values, axis=-1), axis=0)
+        return np.sum(np.unpackbits(cast(UInt8Array, values), axis=-1), axis=0)
 
     @property
-    def mean(self) -> np.ndarray:
+    def mean(self) -> UInt8Array:
         """
         Get bitwise majority value over the whole buffer.
 
         Returns
         -------
-        np.ndarray
+        UInt8Array
             Bitwise-majority representative with shape (*feature_shape),
             where each bit is selected by majority vote across n entries.
         """

@@ -16,7 +16,7 @@ The package focuses on two domains: exponential moving average (EMA) and fixed-s
 pip install -r requirements.txt
 ```
 
-For module-level details, see [src/README.md](src/README.md).
+For module-level details, see [src/array_utility/README.md](src/array_utility/README.md).
 
 ```python
 import numpy as np

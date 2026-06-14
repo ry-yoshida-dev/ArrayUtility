@@ -5,6 +5,8 @@ from abc import ABC, abstractmethod
 from dataclasses import dataclass, field
 from typing import TypeVar
 
+from ..types import NumericArray
+
 
 BaseRingBufferT = TypeVar("BaseRingBufferT", bound="BaseRingBuffer")
 
@@ -18,17 +20,17 @@ class BaseRingBuffer(ABC):
     ----------
     n : int
         The maximum number of frames stored in the buffer.
-    value : np.ndarray
+    value : NumericArray
         Buffer array of shape (n, *feature_shape).
     _index : int
         Internal pointer to the next write position.
     """
 
     n: int
-    value: np.ndarray
+    value: NumericArray
     _index: int = field(init=False, default=0)
 
-    def __post_init__(self):
+    def __post_init__(self) -> None:
         if self.n <= 0:
             raise ValueError(f"n must be greater than 0, but got {self.n}")
         if self.value.ndim == 1:
@@ -37,28 +39,28 @@ class BaseRingBuffer(ABC):
             raise ValueError(f"value first axis length ({self.value.shape[0]}) must match n ({self.n})")
 
     @abstractmethod
-    def update(self, value: np.ndarray) -> None:
+    def update(self, value: NumericArray) -> None:
         """
         Update the buffer with a new vector.
 
         Parameters
         ----------
-        value : np.ndarray
+        value : NumericArray
             The new vector with shape (*feature_shape) to be stored.
         """
 
     @abstractmethod
-    def extend(self, values: np.ndarray) -> None:
+    def extend(self, values: NumericArray) -> None:
         """
         Extend the buffer with new vectors.
 
         Parameters
         ----------
-        values : np.ndarray
+        values : NumericArray
             The new vectors with shape (n, *feature_shape) to be stored.
         """
 
-    def get_last_k(self, k: int) -> np.ndarray:
+    def get_last_k(self, k: int) -> NumericArray:
         """
         Get the last k vectors from the buffer.
 
@@ -74,12 +76,12 @@ class BaseRingBuffer(ABC):
             return self.value[start : self._index]
         return np.concatenate([self.value[start:], self.value[: self._index]], axis=0)
 
-    def _validate_vector_shape(self, value: np.ndarray) -> None:
+    def _validate_vector_shape(self, value: NumericArray) -> None:
         expected_shape = self.value.shape[1:]
         if value.shape != expected_shape:
             raise ValueError(f"value shape {value.shape} must match {expected_shape}")
 
-    def _validate_batch_shape(self, values: np.ndarray) -> None:
+    def _validate_batch_shape(self, values: NumericArray) -> None:
         if values.ndim != self.value.ndim:
             raise ValueError(f"values ndim {values.ndim} must match {self.value.ndim}")
         expected_shape = self.value.shape[1:]
@@ -87,38 +89,38 @@ class BaseRingBuffer(ABC):
             raise ValueError(f"values shape[1:] {values.shape[1:]} must match {expected_shape}")
 
     @property
-    def latest(self) -> np.ndarray:
+    def latest(self) -> NumericArray:
         """
         Get the most recently appended vector.
 
         Returns
         -------
-        np.ndarray
+        NumericArray
             The most recently stored vector with shape (*feature_shape).
         """
         return self.value[self._index - 1]
 
     @property
-    def ordered_value(self) -> np.ndarray:
+    def ordered_value(self) -> NumericArray:
         """
         Get the value of the buffer in the order of the oldest to latest.
 
         Returns
         -------
-        np.ndarray
+        NumericArray
             The ordered value of the buffer with shape (n, *feature_shape).
         """
         return np.roll(self.value, -self._index, axis=0)
 
     @property
     @abstractmethod
-    def mean(self) -> np.ndarray:
+    def mean(self) -> NumericArray:
         """
         Get the mean of the buffer.
 
         Returns
         -------
-        np.ndarray
+        NumericArray
             The mean of the buffer with shape (*feature_shape).
         """
 
@@ -126,7 +128,7 @@ class BaseRingBuffer(ABC):
     def build(
         cls: type[BaseRingBufferT],
         n: int,
-        init_value: np.ndarray,
+        init_value: NumericArray,
     ) -> BaseRingBufferT:
         """
         Create a buffer instance pre-filled with an initial tensor of shape.
@@ -135,7 +137,7 @@ class BaseRingBuffer(ABC):
         ----------
         n : int
             The maximum number of frames stored in the buffer.
-        init_value : np.ndarray
+        init_value : NumericArray
             Initial value with shape (*feature_shape) used to fill all frames.
 
         Returns

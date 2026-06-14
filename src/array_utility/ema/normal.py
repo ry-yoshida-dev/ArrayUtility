@@ -1,8 +1,8 @@
 from __future__ import annotations
 from dataclasses import dataclass
-from typing import Any
 import numpy as np
-import numpy.typing as npt
+
+from ..types import FloatArray
 
 
 @dataclass
@@ -12,13 +12,13 @@ class EMACalculator:
 
     Attributes
     ----------
-    value : np.ndarray
+    value : FloatArray
         Current EMA value with shape (*feature_shape).
     alpha : float, default=0.5
         Smoothing factor in [0, 1]. Larger values react faster to new samples.
     """
 
-    value: npt.NDArray[np.floating[Any]]
+    value: FloatArray
     alpha: float = 0.5
 
     def __post_init__(self) -> None:
@@ -27,13 +27,13 @@ class EMACalculator:
         if not np.issubdtype(self.value.dtype, np.floating):
             raise TypeError(f"value dtype must be floating, but got {self.value.dtype}")
 
-    def update(self, value: npt.NDArray[np.floating[Any]]) -> None:
+    def update(self, value: FloatArray) -> None:
         """
         Update the EMA with a new value.
 
         Parameters
         ----------
-        value : np.ndarray
+        value : FloatArray
             New sample with shape (*feature_shape).
         """
         if value.shape != self.value.shape:
