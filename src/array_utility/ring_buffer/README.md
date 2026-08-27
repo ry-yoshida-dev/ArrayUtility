@@ -15,6 +15,10 @@ This directory contains fixed-length ring buffer utilities for array features.
 
 If `mean` is queried often, use `AveragingRingBuffer`.
 
+To read the buffer oldest-first, `ordered_value` returns it as one array. A caller that wants only
+part of it should index `value` with `ordered_indices` instead, which is the same order without the
+whole-buffer copy `ordered_value` makes.
+
 ## Components
 
 | Component | Description |

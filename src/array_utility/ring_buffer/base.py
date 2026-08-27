@@ -5,7 +5,7 @@ from abc import ABC, abstractmethod
 from dataclasses import dataclass, field
 from typing import TypeVar
 
-from ..types import NumericArray
+from ..types import IntegerArray, NumericArray
 
 
 BaseRingBufferT = TypeVar("BaseRingBufferT", bound="BaseRingBuffer")
@@ -99,6 +99,24 @@ class BaseRingBuffer(ABC):
             The most recently stored vector with shape (*feature_shape).
         """
         return self.value[self._index - 1]
+
+    @property
+    def ordered_indices(self) -> IntegerArray:
+        """
+        Get the buffer rows in the order of the oldest to latest.
+
+        Indexing `value` with this is what `ordered_value` returns, without
+        the whole-buffer copy `np.roll` makes. A caller that only wants part
+        of the ordered buffer -- some of its features, or one row per feature
+        -- should index with this instead, so the copy is the size of what it
+        asked for rather than of the buffer.
+
+        Returns
+        -------
+        IntegerArray
+            Row indices with shape ``(n,)``.
+        """
+        return (np.arange(self.n) + self._index) % self.n
 
     @property
     def ordered_value(self) -> NumericArray:
