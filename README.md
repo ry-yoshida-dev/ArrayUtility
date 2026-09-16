@@ -7,7 +7,7 @@ The package focuses on two domains: exponential moving average (EMA) and fixed-s
 
 ## Requirements
 
-- Python 3.10+
+- Python 3.12+
 - `numpy`
 
 ## Usage
