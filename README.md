@@ -2,21 +2,17 @@
 
 ## Overview
 
-`ArrayUtility` provides typed, NumPy-based utilities for streaming array operations.
-The package focuses on two domains: exponential moving average (EMA) and fixed-size ring buffers, including bit-oriented variants for `uint8` data.
+`ArrayUtility` provides typed, NumPy-based utilities for streaming array operations: exponential moving average (EMA) and fixed-size ring buffers, including bit-oriented variants for `uint8` data.
 
-## Requirements
+## Installation
 
-- Python 3.12+
-- `numpy`
-
-## Usage
+Requires Python 3.12+.
 
 ```bash
-pip install -r requirements.txt
+pip install .
 ```
 
-For module-level details, see [src/array_utility/README.md](src/array_utility/README.md).
+## Usage
 
 ```python
 import numpy as np

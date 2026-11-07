@@ -12,7 +12,7 @@ It provides a standard numeric EMA and a bit-oriented EMA for packed `uint8` val
 | [`normal.py`](normal.py) | `EMACalculator` for numeric vectors with standard EMA updates. |
 | [`bit.py`](bit.py) | `BitEMACalculator` for `uint8` packed bits with per-bit EMA and thresholded output. |
 
-## Usage
+## Examples
 
 ### Numeric EMA
 

@@ -2,32 +2,17 @@
 
 ## Overview
 
-This directory contains fixed-length ring buffer utilities for array features.
-
-## Which class to use
-
-| Class | Use this when |
-| ----- | ------------- |
-| `RingBuffer` | Keep the latest N data points |
-| `AveragingRingBuffer` | Keep the latest N data points and query `mean` often |
-| `BitRingBuffer` | Keep the latest N bit-encoded vectors (for example pHash bytes) |
-| `BitAveragingRingBuffer` | Keep bit-encoded vectors and query bitwise majority often |
-
-If `mean` is queried often, use `AveragingRingBuffer`.
-
-To read the buffer oldest-first, `ordered_value` returns it as one array. A caller that wants only
-part of it should index `value` with `ordered_indices` instead, which is the same order without the
-whole-buffer copy `ordered_value` makes.
+Fixed-length ring buffers for array features. `standard` buffers compute `mean` on demand; `averaging` buffers cache accumulators so frequent `mean` queries stay cheap. Bit variants store `uint8` bit-packed vectors (e.g. pHash bytes) and use the bitwise majority as `mean`.
 
 ## Components
 
 | Component | Description |
 | --------- | ----------- |
 | [base.py](base.py) | Abstract base class with common buffer operations |
-| [averaging](averaging) | Averaging ring buffers (base + numeric + bit) |
-| [standard](standard) | Standard ring buffers (base + numeric + bit) |
+| [averaging](averaging/README.md) | `AveragingRingBuffer` and `BitAveragingRingBuffer`, with cached accumulation |
+| [standard](standard/README.md) | `RingBuffer` and `BitRingBuffer`, computing `mean` on demand |
 
-## Quick Usage
+## Examples
 
 ```python
 import numpy as np

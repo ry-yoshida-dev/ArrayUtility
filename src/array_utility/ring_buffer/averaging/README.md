@@ -13,7 +13,7 @@ These classes optimize frequent `mean` queries by updating internal statistics d
 | [`normal.py`](normal.py) | `AveragingRingBuffer` for numeric arrays with arithmetic mean from cached sums. |
 | [`bit.py`](bit.py) | `BitAveragingRingBuffer` for `uint8` bit-packed arrays with cached bit counts and majority output. |
 
-## Usage
+## Examples
 
 ### Numeric Averaging Ring Buffer
 

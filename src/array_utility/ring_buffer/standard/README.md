@@ -13,7 +13,7 @@ These classes focus on storage and retrieval behavior, and compute representativ
 | [`normal.py`](normal.py) | `RingBuffer` for numeric arrays with arithmetic-mean access via `mean`. |
 | [`bit.py`](bit.py) | `BitRingBuffer` for `uint8` bit-packed arrays with bitwise-majority `mean`. |
 
-## Usage
+## Examples
 
 ### Numeric Ring Buffer
 
