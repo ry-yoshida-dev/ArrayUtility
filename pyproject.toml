@@ -31,3 +31,6 @@ where = ["src"]
 
 [tool.setuptools.package-data]
 array_utility = ["py.typed"]
+
+[tool.uv]
+exclude-newer = "7 days"
